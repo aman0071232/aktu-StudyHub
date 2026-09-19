@@ -5,6 +5,7 @@ import {
   Flame,
   NotebookPen,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,8 @@ const resourceThemes = {
 };
 
 function ResourceCard({ type, onClick }) {
+  const navigate = useNavigate();
+
   const resource = resourceThemes[type];
 
   if (!resource) {
@@ -75,10 +78,46 @@ function ResourceCard({ type, onClick }) {
 
   const Icon = resource.icon;
 
+  /*
+  |--------------------------------------------------------------------------
+  | Resource navigation
+  |--------------------------------------------------------------------------
+  |
+  | Keep support for an external onClick if another component provides one.
+  | Otherwise use the existing StudyHub routes/search system.
+  |
+  */
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+      return;
+    }
+
+    if (type === "pyqs") {
+      navigate("/pyqs");
+      return;
+    }
+
+    if (type === "notes") {
+      navigate("/search?q=notes");
+      return;
+    }
+
+    if (type === "shortNotes") {
+      navigate("/search?q=short%20notes");
+      return;
+    }
+
+    if (type === "questions") {
+      navigate("/search?q=expected%20questions");
+    }
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={`
         group
         relative

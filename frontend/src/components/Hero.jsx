@@ -8,7 +8,32 @@ import {
   GraduationCap,
 } from "lucide-react";
 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function Hero() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const cleanQuery = searchQuery.trim();
+
+    // If search is empty, simply open the search page
+    if (!cleanQuery) {
+      navigate("/search");
+      return;
+    }
+
+    // Send search query to the existing Search page
+    navigate(`/search?q=${encodeURIComponent(cleanQuery)}`);
+  };
+
   return (
     <section
       id="home"
@@ -77,7 +102,10 @@ function Hero() {
               SEARCH
           ================================================= */}
 
-          <div className="animate-scale-in delay-300 mx-auto mt-8 flex w-full max-w-2xl items-center rounded-[18px] border border-[#E4DCE8] bg-white/90 p-2 shadow-[0_18px_50px_rgba(82,58,99,0.09)] backdrop-blur-xl transition-all duration-300 focus-within:border-[#C7B6F2] focus-within:shadow-[0_20px_60px_rgba(112,70,232,0.14)]">
+          <form
+            onSubmit={handleSearch}
+            className="animate-scale-in delay-300 mx-auto mt-8 flex w-full max-w-2xl items-center rounded-[18px] border border-[#E4DCE8] bg-white/90 p-2 shadow-[0_18px_50px_rgba(82,58,99,0.09)] backdrop-blur-xl transition-all duration-300 focus-within:border-[#C7B6F2] focus-within:shadow-[0_20px_60px_rgba(112,70,232,0.14)]"
+          >
             <div className="ml-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#E8DFFF] to-[#FFE6EE] text-[#7046E8]">
               <Search size={18} />
             </div>
@@ -85,12 +113,14 @@ function Hero() {
             <input
               id="global-search"
               type="text"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
               placeholder="Search subjects, topics, notes or papers..."
               className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm font-medium text-[#28222D] outline-none placeholder:text-[#A49AA7] sm:text-[15px]"
             />
 
             <button
-              type="button"
+              type="submit"
               className="group flex shrink-0 items-center gap-2 rounded-[13px] bg-gradient-to-r from-[#7046E8] via-[#824FE2] to-[#B15CCB] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#7046E8]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#7046E8]/30"
             >
               Search
@@ -99,7 +129,7 @@ function Hero() {
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
             </button>
-          </div>
+          </form>
 
           {/* =================================================
               STUDY RESOURCES PREVIEW
@@ -242,38 +272,48 @@ function Hero() {
 
             {/* Secondary */}
 
-            <a
-              href="#resources"
-              className="
-                group
-                inline-flex
-                items-center
-                gap-2
-                rounded-[14px]
-                border
-                border-[#DDD3E2]
-                bg-gradient-to-br
-                from-white
-                to-[#FAF5FF]
-                px-6
-                py-3.5
-                text-sm
-                font-bold
-                text-[#514757]
-                shadow-sm
-                transition-all
-                duration-300
-                hover:-translate-y-1
-                hover:border-[#CFC0F3]
-                hover:text-[#6846D4]
-                hover:shadow-md
-              "
-            >
-              Browse Resources
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </a>
+           <button
+  type="button"
+  onClick={() => {
+    const resourcesSection = document.getElementById("resources");
+
+    if (resourcesSection) {
+      resourcesSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }}
+  className="
+    group
+    inline-flex
+    items-center
+    gap-2
+    rounded-[14px]
+    border
+    border-[#DDD3E2]
+    bg-gradient-to-br
+    from-white
+    to-[#FAF5FF]
+    px-6
+    py-3.5
+    text-sm
+    font-bold
+    text-[#514757]
+    shadow-sm
+    transition-all
+    duration-300
+    hover:-translate-y-1
+    hover:border-[#CFC0F3]
+    hover:text-[#6846D4]
+    hover:shadow-md
+  "
+>
+  Browse Resources
+  <span className="transition-transform duration-300 group-hover:translate-x-1">
+    →
+  </span>
+</button>
           </div>
         </div>
       </div>
